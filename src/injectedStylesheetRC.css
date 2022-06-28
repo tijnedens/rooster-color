@@ -1,0 +1,103 @@
+.select-course {
+  position: relative;
+}
+
+.select-course::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2L17.875 1.9 22.1 6.125ZM3 21v-4.25l10.6-10.6 4.25 4.25L7.25 21ZM14.325 9.675l-.7-.7 1.4 1.4Z"/></svg>') 4 20, auto;
+  z-index: 5;
+}
+
+/* Course boxes in calendar view */
+.select-course .dhx_cal_event {
+  z-index: 10;
+  animation: box-pop 500ms;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2L17.875 1.9 22.1 6.125ZM3 21v-4.25l10.6-10.6 4.25 4.25L7.25 21ZM14.325 9.675l-.7-.7 1.4 1.4Z"/></svg>') 4 20, auto;
+}
+
+@keyframes box-pop {
+  50% {
+    transform: scale(120%);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Override cursor for course box titles */
+.select-course .dhx_move_denied .dhx_cal_event .dhx_title {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2L17.875 1.9 22.1 6.125ZM3 21v-4.25l10.6-10.6 4.25 4.25L7.25 21ZM14.325 9.675l-.7-.7 1.4 1.4Z"/></svg>') 4 20, auto;
+}
+
+/* Remove tooltip when selecting */
+.select-course+.tooltip {
+  visibility: hidden !important;
+}
+
+/* Ripple effect on select */
+.select-ripple-container {
+  clip-path: url("#calendar-mask");
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.select-ripple {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  clip-path: circle(0%);
+  animation: ripple 500ms linear;
+  pointer-events: none;
+  z-index: 11;
+}
+
+@keyframes ripple {
+  to {
+    clip-path: circle(50%);
+  }
+}
+
+.rooster-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Fix text under the ripple effect */
+
+.select-course .dhx_body,
+.selecting-course .dhx_body {
+  transition: color 500ms;
+}
+
+.selecting-course .dhx_body>* {
+  z-index: 15;
+  position: relative;
+}
+
+.dhx_cal_event {
+  overflow: hidden;
+}
+
+.title-overlay {
+  position: absolute;
+  top: 0;
+  background: none !important;
+  z-index: 15;
+  transition: color 500ms;
+}

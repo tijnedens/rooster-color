@@ -1,112 +1,176 @@
 'use strict';
 
-import './popup.css';
+var loadedCourses;
 
-(function() {
-  // We will make use of Storage API to get and store `count` value
-  // More information on Storage API can we found at
-  // https://developer.chrome.com/extensions/storage
+/*
+ * Ripple method stolen from css-tricks.com
+ * I stole the design style, so why not steal the code itself instead of trying to copy it on my own.
+ */
+function createRipple(event) {
+  const button = event.currentTarget;
+  const circle = document.createElement("span");
+  const diameter = Math.max(button.clientWidth, button.clientHeight);
+  const radius = diameter / 2;
 
-  // To get storage access, we have to mention it in `permissions` property of manifest.json file
-  // More information on Permissions can we found at
-  // https://developer.chrome.com/extensions/declare_permissions
-  const counterStorage = {
-    get: cb => {
-      chrome.storage.sync.get(['count'], result => {
-        cb(result.count);
-      });
-    },
-    set: (value, cb) => {
-      chrome.storage.sync.set(
-        {
-          count: value,
-        },
-        () => {
-          cb();
-        }
-      );
-    },
-  };
+  circle.style.width = circle.style.height = `${diameter}px`;
+  circle.style.left = `${event.clientX - (button.getBoundingClientRect().left + radius)}px`;
+  circle.style.top = `${event.clientY - (button.getBoundingClientRect().top + radius)}px`;
+  circle.classList.add("ripple");
 
-  function setupCounter(initialValue = 0) {
-    document.getElementById('counter').innerHTML = initialValue;
+  const ripple = button.getElementsByClassName("ripple")[0];
 
-    document.getElementById('incrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'INCREMENT',
-      });
-    });
-
-    document.getElementById('decrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'DECREMENT',
-      });
-    });
+  if (ripple) {
+    ripple.remove();
   }
 
-  function updateCounter({ type }) {
-    counterStorage.get(count => {
-      let newCount;
+  button.appendChild(circle);
+}
 
-      if (type === 'INCREMENT') {
-        newCount = count + 1;
-      } else if (type === 'DECREMENT') {
-        newCount = count - 1;
-      } else {
-        newCount = count;
-      }
+/* Add ripple effect to button clicks */
+const buttons = document.getElementsByTagName("button");
+for (const button of buttons) {
+  button.addEventListener("click", createRipple);
+}
 
-      counterStorage.set(newCount, () => {
-        document.getElementById('counter').innerHTML = newCount;
+/* Addbutton click opens input menu */
+const addButton = document.querySelector(".add-button");
+const input = document.querySelector(".input");
+addButton.addEventListener("click", openInput);
 
-        // Communicate with content script of
-        // active tab by sending a message
-        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-          const tab = tabs[0];
+function openInput(e) {
+  e.stopPropagation();
+  input.classList.add("open");
+}
 
-          chrome.tabs.sendMessage(
-            tab.id,
-            {
-              type: 'COUNT',
-              payload: {
-                count: newCount,
-              },
-            },
-            response => {
-              console.log('Current count value passed to contentScript file');
-            }
-          );
-        });
-      });
-    });
+/* Clicking outside of input menu */
+input.addEventListener("click", (e) => {
+  e.stopPropagation();
+})
+document.addEventListener("click", (e) => {
+  input.classList.remove("open");
+})
+
+/* Start select in web page */
+const selectButton = document.querySelector(".select-button");
+const colorPicker = document.querySelector(".color-picker input");
+
+selectButton.addEventListener("click", (e) => {
+  var success = send({ action: "SELECT", color: colorPicker.value });
+  if (success) {
+    window.close();
   }
+})
 
-  function restoreCounter() {
-    // Restore count value
-    counterStorage.get(count => {
-      if (typeof count === 'undefined') {
-        // Set counter value as 0
-        counterStorage.set(0, () => {
-          setupCounter(0);
-        });
-      } else {
-        setupCounter(count);
-      }
-    });
-  }
+/* Communicating with page */
+async function send(msg) {
+  var result = false;
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, msg, response => {
+      result = true;
+    })
+  })
+  return result;
+}
 
-  document.addEventListener('DOMContentLoaded', restoreCounter);
-
-  // Communicate with background file by sending a message
-  chrome.runtime.sendMessage(
-    {
-      type: 'GREETINGS',
-      payload: {
-        message: 'Hello, my name is Pop. I am from Popup.',
-      },
-    },
-    response => {
-      console.log(response.message);
+/* Set visibility of course list based on the availability of courses */
+window.addEventListener("load", async function () {
+  chrome.storage.sync.get((data) => {
+    if (data.courses) {
+      loadedCourses = data.courses;
     }
-  );
-})();
+
+    if (loadedCourses && Object.keys(loadedCourses).length > 0) {
+      for (const course in loadedCourses) {
+        addCourseListElement(course);
+      }
+      courseList.style.visibility = "visible";
+      const courseListTitle = document.querySelector(".course-list-title");
+      courseListTitle.style.visibility = "visible";
+      noCourses.style.display = "none";
+      courseList.addEventListener("scroll", updateScrollVisibility);
+    }
+  })
+})
+
+const courseList = document.querySelector(".course-list");
+const noCourses = document.querySelector(".no-courses");
+
+function addCourseListElement(course) {
+  const div = document.createElement("div");
+  const colorPickerRect = document.createElement("input");
+  const text = document.createElement("span");
+  const removeIcon = document.createElement("span");
+
+  colorPickerRect.setAttribute("type", "color");
+  colorPickerRect.value = loadedCourses[course];
+  colorPickerRect.addEventListener("change", (e) => {
+    pickNewColor(e.currentTarget, course);
+  });
+
+  div.classList.add("course");
+  div.style.setProperty("--color", loadedCourses[course]);
+
+  text.innerHTML = course;
+  text.classList.add("course-text");
+
+  removeIcon.classList.add("material-symbols-outlined");
+  removeIcon.classList.add("remove-icon");
+  removeIcon.innerHTML = "remove";
+  removeIcon.addEventListener("click", (e) => {
+    removeCourse(div, course);
+  });
+
+  div.appendChild(colorPickerRect);
+  div.appendChild(text);
+  div.appendChild(removeIcon);
+  courseList.appendChild(div);
+}
+
+/* Hide add button when scrolling to the bottom */
+function updateScrollVisibility() {
+  if (courseList.scrollTop + courseList.offsetHeight >= courseList.scrollHeight - 20) {
+    addButton.style.opacity = 0;
+    addButton.style.pointerEvents = "none";
+  } else if (addButton.style.opacity == 0) {
+    addButton.style.opacity = "";
+    addButton.style.pointerEvents = "all";
+  }
+}
+
+/* Removing courses from list */
+function removeCourse(listElement, course) {
+  chrome.storage.sync.get((data) => {
+    listElement.remove();
+
+    if (Object.keys(data.courses).length == 1) {
+      emptyCourseList();
+    }
+
+    if (data.courses[course]) {
+      data.courses[course] = undefined;
+    }
+    chrome.storage.sync.set(data);
+
+    send({ action: "UPDATE" });
+
+  })
+}
+
+/* Resetting the course list to "No courses" if the last course is removed */
+function emptyCourseList() {
+  courseList.style.visibility = "";
+  const courseListTitle = document.querySelector(".course-list-title");
+  courseListTitle.style.visibility = "";
+  noCourses.style.display = "";
+}
+
+/* Updating colors when picking a new color in the course list */
+function pickNewColor(colorPicker, course) {
+  chrome.storage.sync.get((data) => {
+    if (data.courses[course]) {
+      data.courses[course] = colorPicker.value;
+    }
+    chrome.storage.sync.set(data);
+    send({ action: "UPDATE" });
+  });
+}
