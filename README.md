@@ -17,7 +17,7 @@ As the extension is not available in the Chrome Webstore (yet) it must be instal
 * Extension should now be installed and displayed on the extensions page.
 ## Usage
 
-When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the small jigsaw icon in the top left menu bar and clicking on the extension.
+When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the small jigsaw icon in the top right menu bar and clicking on the extension.
 
 > Tip: You can pin the extension to the menu bar. 
 > * Just click on the jigsaw icon to open the extensions menu.
