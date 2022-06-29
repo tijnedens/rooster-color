@@ -13,7 +13,7 @@ As the extension is not available in the Chrome Webstore (yet) it must be instal
 * Open Chrome and go to *chrome://extensions* (enter it in the address bar).
 * Enable developer mode (at the top right of this page).
 * Select **Load Unpacked**.
-* Now select the unpacked folder called '*rooster-color-<version>*'.
+* Now select the unpacked folder called '*rooster-color-\<version\>*'.
 * Extension should now be installed and displayed on the extensions page.
 ## Usage
 
