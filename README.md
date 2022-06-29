@@ -22,3 +22,8 @@ When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by p
 > Tip: You can pin the extension to the menu bar. 
 > * Just click on the jigsaw icon to open the extensions menu.
 > * Then press the small pin icon next to the extension name.
+  
+Special Thanks
+--------------
+
+Special thanks go to G. Luiten for giving me the idea.
