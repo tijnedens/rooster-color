@@ -30,6 +30,8 @@ body {
 
 .title {
     margin-bottom: 10px;
+    font-size: 2.2em;
+    font-weight: bold;
 }
 
 @property --glare {
@@ -92,6 +94,8 @@ body {
     text-align: left;
     visibility: hidden;
     margin-top: 8px;
+    font-size: 1.6em;
+    font-weight: 500;
 }
 
 /* Course list scrollbar */
@@ -131,7 +135,7 @@ body {
     background: none;
     flex-shrink: 0;
     width: 10px;
-    min-height: 30px;
+    min-height: 100%;
     cursor: pointer;
 }
 
@@ -141,6 +145,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-align: left;
+    font-size: 1em;
 }
 
 .course .remove-icon {
