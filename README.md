@@ -34,7 +34,7 @@ As the extension is not available on the Firefox add-ons page (yet) it must be i
 * Extension should now be installed and displayed on the extensions page.
 ### Usage
 
-When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the RC icon in the top right menu bar.
+When visiting [rooster.rug.nl](https://rooster.rug.nl/), open the extension UI by pressing the RC icon in the top right menu bar.
   
 Special Thanks
 --------------
