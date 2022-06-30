@@ -1,0 +1,301 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    color: #222;
+}
+
+body {
+    font-family: 'Roboto';
+    letter-spacing: 0.25px;
+    width: 250px;
+    height: 300px;
+    user-select: none;
+    background-color: white;
+    font-size: 75%;
+}
+
+.app {
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+
+.title {
+    margin-bottom: 10px;
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+@property --glare {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+.title .subtitle {
+    --glare: 0%;
+    color: transparent;
+    background: rgb(64, 224, 208);
+    background: linear-gradient(70deg, rgb(54, 197, 183) calc(var(--glare) - 5%), rgb(255, 255, 255) var(--glare), rgb(54, 197, 183) calc(var(--glare) + 5%));
+    background-size: 200% 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.title:hover .subtitle {
+    animation: glare 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+@keyframes glare {
+    from {
+        --glare: 0%;
+    }
+
+    to {
+        --glare: 100%;
+    }
+}
+
+.no-courses {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.empty-text {
+    opacity: 60%;
+    height: 50px;
+}
+
+.course-list {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 10px;
+    visibility: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-left: -15px;
+    margin-right: -15px;
+    scrollbar-width: thin;
+}
+
+.course-list-title {
+    text-align: left;
+    visibility: hidden;
+    margin-top: 8px;
+    font-size: 1.6em;
+    font-weight: 500;
+}
+
+/**/
+
+.course {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+    min-height: 30px;
+    max-height: 30px;
+    gap: 5px;
+}
+
+.course input {
+    position: relative;
+    border: none;
+    background: none;
+    flex-shrink: 0;
+    width: 7px;
+    min-height: 80%;
+    cursor: pointer;
+}
+
+.course .course-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+    font-size: 1em;
+}
+
+.course .remove-icon {
+    margin-left: auto;
+    font-size: 1.5em;
+    color: rgb(0, 0, 0, 0.6);
+}
+
+.course .remove-icon:hover {
+    color: rgb(255, 0, 0, 1);
+    cursor: pointer;
+}
+
+button {
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+.add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    background-color: turquoise;
+    padding: 10px;
+    margin: 15px;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14), 0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: opacity 300ms;
+}
+
+.add-button span {
+    font-size: 1.8em;
+}
+
+.input.open+.add-button {
+    opacity: 0;
+    cursor: default;
+}
+
+span.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    transform: scale(0);
+    animation: ripple 500ms linear;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(400%);
+        opacity: 0;
+    }
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    width: 80%;
+    margin: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    bottom: 0;
+    visibility: hidden;
+    transition: visibility 500ms;
+    animation: close 500ms cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+    z-index: 10;
+}
+
+.input.open {
+    animation: open 300ms cubic-bezier(.42, .11, .67, 1.26) forwards;
+    visibility: visible;
+}
+
+@keyframes open {
+    from {
+        transform: translateY(150%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes close {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(150%);
+    }
+}
+
+.color-picker {
+    width: 15px;
+    height: 15px;
+    overflow: hidden;
+    position: relative;
+    clip-path: circle(40% at center);
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14), 0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.color-picker::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+}
+
+.color-picker input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    transform: scale(300%);
+    cursor: pointer;
+}
+
+.add-title {
+    display: block;
+    background-color: turquoise;
+    padding: 5px;
+    width: 100%;
+}
+
+.option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.option label {
+    margin: 2px;
+}
+
+.select-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border: none;
+    border-radius: 4px;
+    background-color: turquoise;
+    width: 100px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.select-button .button-icon {
+    font-size: 1.5em;
+}
+
+.select-button .button-text {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.9em;
+}

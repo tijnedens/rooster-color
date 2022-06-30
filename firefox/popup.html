@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!--
+       __                     _                       
+      /__ o o  _   |\/|      |_)  _  |  _      _   _| 
+      \_| | | _>   |  | \/   |_) (/_ | (_) \/ (/_ (_| 
+           _|           /                             
+
+  -->
+
+  <meta charset="UTF-8">
+  <title>RoosterColor</title>
+  <link rel="stylesheet" href="src/popup.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css">
+</head>
+
+<body>
+  <div class="app">
+    <h1 class="title">Rooster<span class="subtitle">Color</span>
+    </h1>
+    <hr>
+    <div class="no-courses">
+      <span class="empty-text">You haven't added any courses yet</span>
+    </div>
+    <h2 class="course-list-title">Courses</h2>
+    <div class="course-list"></div>
+    <div class="input">
+      <div class="add-title">
+        <h3>Add course</h3>
+      </div>
+      <div class="options">
+        <div class="option">
+          <label>Pick Color:</label>
+          <div class="color-picker"><input type="color" value="#7f7f7f"></div>
+        </div>
+      </div>
+      <button class="select-button">
+        <span class="material-symbols-outlined button-icon">edit</span><span class="button-text">select</span>
+      </button>
+    </div>
+
+    <button class="add-button"">
+      <span class=" material-symbols-outlined">
+      add
+      </span>
+    </button>
+  </div>
+
+
+
+  <script src="src/popup.js"></script>
+</body>
+
+</html>
