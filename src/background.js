@@ -1,16 +1,17 @@
-'use strict';
+"use strict";
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.disable();
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-    let rule1 = {
-      conditions: [
-        new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: { hostSuffix: 'rooster.rug.nl' },
-        })
-      ],
-      actions: [new chrome.declarativeContent.ShowAction()],
-    };
-    chrome.declarativeContent.onPageChanged.addRules([rule1]);
+const url = new RegExp("[a-zA-Z]+:\/\/rooster\.rug\.nl\/.*");
+
+browser.browserAction.onClicked.addListener((tab) => {
+
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    for (const tab of tabs) {
+      if (tab.url.match(url)) {
+        console.log("send message");
+        browser.tabs.sendMessage(tab.id, { data: { action: "TOGGLE" } });
+      }
+    }
+
   });
+
 });

@@ -3,15 +3,31 @@
 const root = document.querySelector("#root");
 var lastColor;
 var lastBox;
-chrome.runtime.onMessage.addListener(receive);
 var courseBoxes;
 var calendar;
 var loadedCourses;
+var frame;
 
 /* Execute on page load */
-window.addEventListener("load", () => {
-  initRC();
+initRC();
+window.addEventListener("message", (message) => {
+  receive(message);
 })
+browser.runtime.onMessage.addListener(receive);
+
+/* Add frame to the webpage (because the popup in firefox is annoying me) */
+function injectFrame() {
+  if (frame) {
+    frame.remove();
+    frame = null;
+    console.log("remove");
+  }
+  frame = document.createElement("iframe");
+  frame.src = browser.extension.getURL("popup.html");
+  frame.classList.add("rc-frame");
+  root.appendChild(frame);
+}
+
 
 function initRC() {
   const schedule = document.querySelector(".personal-schedule");
@@ -36,20 +52,32 @@ function delayedUpdate() {
 }
 
 function receive(message, sender, sendResponse) {
-  if (message.action == "SELECT") {
+  console.log("message received!!!!!!");
+  if (message.data.action == "SELECT") {
     root.classList.add("select-course");
+    frame.remove();
+    frame = null;
     updateBoxes();
-    lastColor = message.color;
+    lastColor = message.data.color;
     for (const box of courseBoxes) {
       box.addEventListener("click", select);
     }
   }
 
-  if (message.action == "UPDATE") {
+  if (message.data.action == "UPDATE") {
     delayedUpdate();
   }
 
-  sendResponse({ data: "antwoord" });
+  if (message.data.action == "TOGGLE") {
+    if (frame) {
+      frame.remove();
+      frame = null;
+    } else {
+      injectFrame();
+    }
+  }
+
+  return Promise.resolve({ data: "antwoord" });
 }
 
 function select(e) {
@@ -204,23 +232,23 @@ function calculateTextColor(color) {
   }
 }
 
-/* Storing a new course using the chrome storage API */
+/* Storing a new course using the browser storage API */
 function storeCourse(e) {
   const eventName = lastBox.querySelector(".dhx_body b").innerHTML;
-  chrome.storage.sync.get((data) => {
+  browser.storage.sync.get().then((data) => {
     if (!data.courses) {
       data.courses = {};
     }
     data.courses[eventName] = lastColor;
 
-    chrome.storage.sync.set(data);
+    browser.storage.sync.set(data);
   });
 }
 
-/* Load courses from chrome storage and set colors */
+/* Load courses from browser storage and set colors */
 async function loadCourses() {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get((data) => {
+    browser.storage.sync.get().then((data) => {
       loadedCourses = data.courses;
       if (loadedCourses) {
         resolve();

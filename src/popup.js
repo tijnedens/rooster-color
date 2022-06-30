@@ -55,26 +55,17 @@ const selectButton = document.querySelector(".select-button");
 const colorPicker = document.querySelector(".color-picker input");
 
 selectButton.addEventListener("click", (e) => {
-  var success = send({ action: "SELECT", color: colorPicker.value });
-  if (success) {
-    window.close();
-  }
+  send({ action: "SELECT", color: colorPicker.value });
 })
 
 /* Communicating with page */
-async function send(msg) {
-  var result = false;
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, msg, response => {
-      result = true;
-    })
-  })
-  return result;
+function send(msg) {
+  window.top.postMessage(msg, "https://rooster.rug.nl/");
 }
 
 /* Set visibility of course list based on the availability of courses */
 window.addEventListener("load", async function () {
-  chrome.storage.sync.get((data) => {
+  browser.storage.sync.get().then((data) => {
     if (data.courses) {
       loadedCourses = data.courses;
     }
@@ -139,7 +130,7 @@ function updateScrollVisibility() {
 
 /* Removing courses from list */
 function removeCourse(listElement, course) {
-  chrome.storage.sync.get((data) => {
+  browser.storage.sync.get().then((data) => {
     listElement.remove();
 
     if (Object.keys(data.courses).length == 1) {
@@ -149,7 +140,7 @@ function removeCourse(listElement, course) {
     if (data.courses[course]) {
       data.courses[course] = undefined;
     }
-    chrome.storage.sync.set(data);
+    browser.storage.sync.set(data);
 
     send({ action: "UPDATE" });
 
@@ -166,11 +157,11 @@ function emptyCourseList() {
 
 /* Updating colors when picking a new color in the course list */
 function pickNewColor(colorPicker, course) {
-  chrome.storage.sync.get((data) => {
+  browser.storage.sync.get().then((data) => {
     if (data.courses[course]) {
       data.courses[course] = colorPicker.value;
     }
-    chrome.storage.sync.set(data);
+    browser.storage.sync.set(data);
     send({ action: "UPDATE" });
   });
 }

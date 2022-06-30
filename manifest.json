@@ -1,8 +1,14 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Roostercolor",
   "version": "1.0.0",
-  "description": "A Chrome extension that enables custom colors for courses on rooster.rug.nl",
+  "description": "A browser extension that enables custom colors for courses on rooster.rug.nl",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "roostercolor@tijnedens.com",
+      "strict_min_version": "42.0"
+    }
+  },
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",
@@ -10,22 +16,25 @@
     "128": "icons/icon_128.png"
   },
   "background": {
-    "service_worker": "src/background.js"
+    "scripts": [
+      "src/background.js"
+    ],
+    "persistent": false
   },
-  "action": {
+  "browser_action": {
     "default_title": "Roostercolor",
-    "default_popup": "popup.html"
+    "default_icon": "icons/icon_48.png"
   },
   "permissions": [
     "storage",
-    "declarativeContent"
+    "activeTab",
+    "tabs"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://rooster.rug.nl/*"
       ],
-      "run_at": "document_idle",
       "js": [
         "lib/tinyColor.js",
         "src/contentScript.js"

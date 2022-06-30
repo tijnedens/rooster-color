@@ -8,6 +8,7 @@
 
 html {
     color: #222;
+    overflow: hidden;
 }
 
 body {
@@ -16,6 +17,7 @@ body {
     width: 250px;
     height: 300px;
     user-select: none;
+    background-color: white;
 }
 
 .app {
