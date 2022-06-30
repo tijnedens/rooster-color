@@ -15,7 +15,7 @@ As the extension is not available in the Chrome Webstore (yet) it must be instal
 * Select **Load Unpacked**.
 * Now select the unpacked folder called '*rooster-color-\<version\>*'.
 * Extension should now be installed and displayed on the extensions page.
-## Usage
+### Usage
 
 When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the small jigsaw icon in the top right menu bar and clicking on the extension.
 
@@ -33,13 +33,9 @@ As the extension is not available on the Firefox add-ons page (yet) it must be i
 * Select **Load Unpacked**.
 * Now select the unpacked folder called '*rooster-color-\<version\>*'.
 * Extension should now be installed and displayed on the extensions page.
-## Usage
+### Usage
 
-When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the small jigsaw icon in the top right menu bar and clicking on the extension.
-
-> Tip: You can pin the extension to the menu bar. 
-> * Just click on the jigsaw icon to open the extensions menu.
-> * Then press the small pin icon next to the extension name.
+When visiting [rooster.rug.nl](https:rooster.rug.nl), open the extension UI by pressing the RC icon in the top right menu bar.
   
 Special Thanks
 --------------
