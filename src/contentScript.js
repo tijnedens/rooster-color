@@ -14,20 +14,7 @@ window.addEventListener("message", (message) => {
   receive(message);
 })
 browser.runtime.onMessage.addListener(receive);
-
-/* Add frame to the webpage (because the popup in firefox is annoying me) */
-function injectFrame() {
-  if (frame) {
-    frame.remove();
-    frame = null;
-    console.log("remove");
-  }
-  frame = document.createElement("iframe");
-  frame.src = browser.extension.getURL("popup.html");
-  frame.classList.add("rc-frame");
-  root.appendChild(frame);
-}
-
+document.addEventListener("click", closeFrame);
 
 function initRC() {
   const schedule = document.querySelector(".personal-schedule");
@@ -55,8 +42,7 @@ function receive(message, sender, sendResponse) {
   console.log("message received!!!!!!");
   if (message.data.action == "SELECT") {
     root.classList.add("select-course");
-    frame.remove();
-    frame = null;
+    closeFrame();
     updateBoxes();
     lastColor = message.data.color;
     for (const box of courseBoxes) {
@@ -70,8 +56,7 @@ function receive(message, sender, sendResponse) {
 
   if (message.data.action == "TOGGLE") {
     if (frame) {
-      frame.remove();
-      frame = null;
+      closeFrame();
     } else {
       injectFrame();
     }
@@ -278,4 +263,20 @@ function isInSelection(box) {
   const selectedName = lastBox.querySelector(".dhx_body b").innerHTML;
   const eventName = box.querySelector(".dhx_body b").innerHTML;
   return (selectedName == eventName);
+}
+
+/* Add frame to the webpage (because the popup in firefox is annoying me) */
+function injectFrame() {
+  if (frame) {
+    closeFrame();
+  }
+  frame = document.createElement("iframe");
+  frame.src = browser.extension.getURL("popup.html");
+  frame.classList.add("rc-frame");
+  root.appendChild(frame);
+}
+
+function closeFrame() {
+  frame.remove();
+  frame = null;
 }

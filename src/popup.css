@@ -8,7 +8,6 @@
 
 html {
     color: #222;
-    overflow: hidden;
 }
 
 body {
@@ -18,6 +17,7 @@ body {
     height: 300px;
     user-select: none;
     background-color: white;
+    font-size: 75%;
 }
 
 .app {
@@ -32,6 +32,8 @@ body {
 
 .title {
     margin-bottom: 10px;
+    font-size: 2.2em;
+    font-weight: bold;
 }
 
 @property --glare {
@@ -88,30 +90,15 @@ body {
     overflow-y: scroll;
     margin-left: -15px;
     margin-right: -15px;
+    scrollbar-width: thin;
 }
 
 .course-list-title {
     text-align: left;
     visibility: hidden;
     margin-top: 8px;
-}
-
-/* Course list scrollbar */
-
-.course-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-.course-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.course-list::-webkit-scrollbar-thumb {
-    background: #888;
-}
-
-.course-list::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    font-size: 1.6em;
+    font-weight: 500;
 }
 
 /**/
@@ -132,8 +119,8 @@ body {
     border: none;
     background: none;
     flex-shrink: 0;
-    width: 10px;
-    min-height: 30px;
+    width: 7px;
+    min-height: 80%;
     cursor: pointer;
 }
 
@@ -143,6 +130,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-align: left;
+    font-size: 1em;
 }
 
 .course .remove-icon {
@@ -253,7 +241,7 @@ span.ripple {
     height: 15px;
     overflow: hidden;
     position: relative;
-    clip-path: circle(45% at center);
+    clip-path: circle(40% at center);
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14), 0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
