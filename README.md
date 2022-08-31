@@ -9,7 +9,7 @@ A browser extension that enables custom colors for courses on [rooster.rug.nl](h
 
 As the extension is not available in the Chrome Webstore (yet) it must be installed as an unpacked extension.
 
-* Download and unzip the [latest release](https://github.com/tijnedens/rooster-color/releases/download/v1.1.0/RoosterColor-v1.1.0-chrome.zip) from this github page.
+* Download and unzip the [latest release](https://github.com/tijnedens/rooster-color/releases/download/v1.1.0/RoosterColor-v1.2.0-chrome.zip) from this github page.
 * Open Chrome and go to *chrome://extensions* (enter it in the address bar).
 * Enable developer mode (at the top right of this page).
 * Select **Load Unpacked**.
@@ -25,9 +25,11 @@ When visiting [rooster.rug.nl](https://rooster.rug.nl/), open the extension UI b
 
 ## Firefox Installation
 
-As the extension is not available on the Firefox add-ons page (yet) it must be installed as an unpacked extension.
+The extension is available in the firefox add-on store. Get it [here](https://addons.mozilla.org/en-GB/firefox/addon/roostercolor/).
 
-* Download the [latest release](https://github.com/tijnedens/rooster-color/releases/download/v1.1.0/RoosterColor-v1.1.0-firefox.zip) from this github page.
+If recent updates don't appear in the add-on store yet, install the extension manually:
+
+* Download the [latest release](https://github.com/tijnedens/rooster-color/releases/download/v1.2.0/RoosterColor-v1.1.0-firefox.zip) from this github page.
 * Open Firefox and go to *about:debugging* (enter it in the address bar).
 * Click **This Firefox** and then **Load Temporary Add-on**.
 * Now select the zip file.
