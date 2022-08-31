@@ -8,6 +8,9 @@ var calendar;
 var loadedCourses;
 var frame;
 
+let calendarObserver = new MutationObserver(update);
+//let listObserver = new MutationObserver(update);
+
 /* Execute on page load */
 initRC();
 window.addEventListener("message", (message) => {
@@ -23,19 +26,18 @@ function initRC() {
     setTimeout(initRC, 1000);
     return;
   }
+  
   updateBoxes();
   loadCourses();
-  delayedUpdate();
-  window.addEventListener("resize", delayedUpdate);
-  schedule.addEventListener("click", delayedUpdate);
+  update();
+  calendarObserver.observe(calendar, {childList: true, attributes: true});
+  schedule.addEventListener("click", update);
 }
 
-function delayedUpdate() {
-  setTimeout(async () => {
-    updateBoxes();
-    await loadCourses();
-    paintLoadedCourses();
-  }, 50);
+async function update() {
+  updateBoxes();
+  await loadCourses();
+  paintLoadedCourses();
 }
 
 function receive(message, sender, sendResponse) {
@@ -51,7 +53,7 @@ function receive(message, sender, sendResponse) {
   }
 
   if (message.data.action == "UPDATE") {
-    delayedUpdate();
+    update();
   }
 
   if (message.data.action == "TOGGLE") {
