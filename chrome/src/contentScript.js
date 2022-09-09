@@ -36,7 +36,7 @@ function initRC() {
 async function update(mutations) {
   updateBoxes();
   await loadCourses();
-  if (!(mutations instanceof PointerEvent)){
+  if (mutations != undefined && !(mutations instanceof PointerEvent)){
     mutations?.forEach(async (mutation) => {
       if (mutation.attributeName == "style" && mutation.oldValue == "display: none;") {
         await loadCustomEvents();
