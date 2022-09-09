@@ -9,6 +9,7 @@ var calendar;
 var loadedCourses;
 
 let calendarObserver = new MutationObserver(update);
+let calenderDisplayObserver = new MutationObserver(update);
 //let listObserver = new MutationObserver(update);
 
 /* Execute on page load */
@@ -27,14 +28,29 @@ function initRC() {
   updateBoxes();
   loadCourses();
   update();
-  calendarObserver.observe(calendar, {childList: true, attributes: true});
+  calendarObserver.observe(calendar, {childList: false, attributes: true});
+  calenderDisplayObserver.observe(calendar.parentElement, {attributeFilter: ["style"], attributeOldValue: true});
   schedule.addEventListener("click", update);
 }
 
-async function update() {
+async function update(mutations) {
   updateBoxes();
   await loadCourses();
-  paintLoadedCourses();;
+  if (!(mutations instanceof PointerEvent)){
+    mutations?.forEach(async (mutation) => {
+      if (mutation.attributeName == "style" && mutation.oldValue == "display: none;") {
+        await loadCustomEvents();
+      }
+    })
+  }
+  paintLoadedCourses();
+}
+
+async function updateCustomEvents() {
+  updateBoxes();
+  await loadCourses();
+  await loadCustomEvents();
+  paintLoadedCourses();
 }
 
 function receive(message, sender, sendResponse) {
@@ -48,7 +64,12 @@ function receive(message, sender, sendResponse) {
   }
 
   if (message.action == "UPDATE") {
+    loadCustomEvents();
     update();
+  }
+
+  if (message.action == "ADD") {
+    addCustomEvent(new Date(message.start_date), new Date(message.end_date), message.location, message.text, message.color);
   }
 
   sendResponse({ data: "antwoord" });
@@ -219,7 +240,26 @@ function storeCourse(e) {
   });
 }
 
-/* Load courses from chrome storage and set colors */
+/* Storing a new custom event using the chrome storage API */
+function storeCustomEvent(customEventData) {
+  chrome.storage.sync.get((data) => {
+    if (!data.customEvents) {
+      data.customEvents = {};
+    }
+    if (!data.courses) {
+      data.courses = {};
+    }
+    if (data.customEvents[customEventData.text] && data.customEvents[customEventData.text].id == customEventData.id) {
+      return;
+    }
+    data.customEvents[customEventData.text] = customEventData;
+    data.courses[customEventData.text] = lastColor;
+    chrome.storage.sync.set(data);
+    drawCustomEvent(customEventData);
+  });
+}
+
+/* Load courses from chrome storage */
 async function loadCourses() {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get((data) => {
@@ -228,6 +268,28 @@ async function loadCourses() {
         resolve();
       } else {
         reject();
+      }
+    });
+  })
+
+}
+
+/* Load custom events from chrome storage and set draw events */
+async function loadCustomEvents() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(async (data) => {
+      var customEvents = data.customEvents;
+      if (Object.keys(customEvents).length > 0) {
+        for (const [title, eventData] of Object.entries(customEvents)) {
+          if (eventData.remove) {
+            removeCustomEvent(title, eventData.id);
+          } else {
+            drawCustomEvent(eventData);
+          }
+          resolve();
+        }
+        chrome.storage.sync.set(data);
+        resolve();
       }
     });
   })
@@ -252,4 +314,42 @@ function isInSelection(box) {
   const selectedName = lastBox.querySelector(".dhx_body b").innerHTML;
   const eventName = box.querySelector(".dhx_body b").innerHTML;
   return (selectedName == eventName);
+}
+
+function drawCustomEvent(customEventData) {
+  var s = document.createElement("script");
+  s.src = chrome.runtime.getURL("src/addCustomEventScript.js");
+  s.setAttribute("data-custom-event", encodeURIComponent(JSON.stringify(customEventData)));
+  s.onload = function() {
+    this.remove();
+  };
+  (document.head || document.documentElement).appendChild(s);
+}
+
+function addCustomEvent(startDate, endDate, location, eventText, color) {
+  var customEventData = {
+    start_date: startDate.toISOString(),
+    end_date: endDate.toISOString(),
+    location: location,
+    text: eventText,
+    remove: false,
+    id: eventText + startDate.toISOString() + endDate.toISOString()
+  };
+  lastColor = color;
+  storeCustomEvent(customEventData);
+}
+
+function removeCustomEvent(text, id) {
+  var s = document.createElement("script");
+  s.src = chrome.runtime.getURL("src/removeCustomEventScript.js");
+  s.setAttribute("data-custom-event", id);
+  s.onload = function() {
+    this.remove();
+  };
+  (document.head || document.documentElement).appendChild(s);
+
+  chrome.storage.sync.get((data) => {
+    data.customEvents[text] = undefined;
+    chrome.storage.sync.set(data);
+  });
 }

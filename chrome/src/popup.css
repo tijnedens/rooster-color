@@ -274,11 +274,51 @@ span.ripple {
     cursor: pointer;
 }
 
-.add-title {
-    display: block;
-    background-color: turquoise;
-    padding: 5px;
+.input-tabs {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: stretch;
     width: 100%;
+    height: 30px;
+    border-bottom: 3px solid turquoise;
+    cursor: pointer;
+}
+
+.input-tab {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.input-tab-highlight {
+    position: absolute;
+    height: 100%;
+    background-color: turquoise;
+    z-index: -1;
+    transition: .2s left;
+}
+
+.tab-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: height 500ms;
+    max-width: 90%;
+}
+
+.tab-option {
+    display: none;
+    width: 100%;
+}
+
+.tab-option.selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
 .option {
@@ -291,7 +331,34 @@ span.ripple {
     margin: 2px;
 }
 
-.select-button {
+.option .text-input input {
+    border: none;
+    border-bottom: 1px solid gray;
+    background-color: #eeeeee;
+    padding: 2px;
+}
+
+.option:has(.text-input) {
+    flex-direction: column;
+}
+
+.option .text-input input:focus {
+    outline-width: 2px;
+    outline-color: turquoise;
+    outline-style: solid;
+    border: none;
+    margin-bottom: 1px;
+}
+
+.date-input input {
+    width: 20px;
+}
+
+.add-options .option {
+    gap: 5px;
+}
+
+.action-button {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -305,11 +372,11 @@ span.ripple {
     cursor: pointer;
 }
 
-.select-button .button-icon {
+.action-button .button-icon {
     font-size: 1.5em;
 }
 
-.select-button .button-text {
+.action-button .button-text {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;

@@ -41,7 +41,6 @@ async function update() {
 }
 
 function receive(message, sender, sendResponse) {
-  console.log("message received!!!!!!");
   if (message.data.action == "SELECT") {
     root.classList.add("select-course");
     closeFrame();
